@@ -526,9 +526,16 @@ static int npcm750_fiu_spi_probe(struct udevice *bus)
 	struct npcm750_fiu_spi_platdata *plat = dev_get_platdata(bus);
 	struct npcm750_fiu_spi_priv *priv = dev_get_priv(bus);
 
-	debug("%s\n", __func__);
+	debug("%s, dev:%d\n", __func__, plat->dev_num);
 	priv->regs = (struct npcm750_fiu_regs *)plat->regs;
 	priv->dev_num = (enum fiu_moudle_tag)plat->dev_num;
+	data = readl(&priv->regs->drd_cfg);
+	debug("FIU drd: %08X\n", data);
+	if (priv->dev_num == FIU_MODULE_X){
+		// BUV w25q256 must use 4byte mode in direct read
+		writel(0x030011bb, &priv->regs->drd_cfg);
+		printf("force update FIU_DRD_CFG for FIUX\n");
+	}
 
 	return 0;
 }

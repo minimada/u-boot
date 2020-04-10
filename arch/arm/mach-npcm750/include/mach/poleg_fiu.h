@@ -80,4 +80,13 @@ enum _spi_uma_data_size
 #define FIU_UMA_CMD_DUM1		8
 #define FIU_UMA_CMD_CMD			0
 
+/*FIU_DRD_CFG*/
+#define FIU_DRD_CFG_LCK         31
+#define FIU_DRD_CFG_RBURST      24
+#define FIU_DRD_CFG_ADDSIZ      16
+#define FIU_DRD_CFG_DBW         12
+#define FIU_DRD_CFG_ACCTYPE     8
+#define FIU_DRD_CFG_RDCMD       0
+
+
 #endif

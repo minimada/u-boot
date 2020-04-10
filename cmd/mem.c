@@ -360,6 +360,10 @@ static int do_mem_cp(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		bus = 3;
 		cs = (dest - SPI3_BASE_ADDR) / SPI_FLASH_REGION_SIZE;
 		flash_base = SPI3_BASE_ADDR + cs * SPI_FLASH_REGION_SIZE;
+	} else if ((dest >= SPIX_BASE_ADDR) && (dest < SPIX_END_ADDR)) {
+		bus = 4;
+		cs = (dest - SPIX_BASE_ADDR) / SPIX_FLASH_REGION_SIZE;
+		flash_base = SPIX_BASE_ADDR + cs * SPIX_FLASH_REGION_SIZE;
 	}
 	/* copying to SPI Flash */
 	if (flash_base > 0) {

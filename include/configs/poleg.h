@@ -60,6 +60,10 @@
 #define SPI0_END_ADDR					0x8FFFFFFF
 #define SPI3_BASE_ADDR					0xA0000000
 #define SPI3_END_ADDR					0xBFFFFFFF
+#define SPIX_FLASH_REGION_SIZE			0x01000000	/* 16MB */
+#define SPIX_BASE_ADDR					0xF8000000
+#define SPIX_END_ADDR					0xF9FFFFFF
+
 
 /* 16MB Graphics Memory size to hide + 32MB for VCD ECE DVC. */
 #define CONFIG_SYS_MEM_TOP_HIDE   ((16 << 20) + (32 << 20))

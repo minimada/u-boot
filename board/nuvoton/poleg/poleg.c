@@ -236,6 +236,8 @@ int board_init(void)
 	/* HSI1SEL */
 	writel((readl(&gcr->mfsel1) | (1 << MFSEL1_HSI1SEL)), &gcr->mfsel1);
 
+	writel((readl(&gcr->mfsel4) | (1 << MFSEL4_SPXSEL)), &gcr->mfsel4);
+
 	/* select DAC2 for VGA output */
 	reg_val = (1 << INTCR_DACSEL) |
 		(1 << INTCR_DACOSOVR) |
