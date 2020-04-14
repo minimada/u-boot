@@ -198,15 +198,13 @@ static void npcm750_adjust_link(struct emc_regs *reg,
 static int npcm750_phy_init(struct npcm750_eth_dev *priv, void *dev)
 {
 	struct phy_device *phydev;
-	int mask = 1, ret;
+	int ret;
+	u32 address = 0x0;
 
-	phydev = phy_find_by_mask(priv->bus, mask, priv->interface);
+	phydev = phy_connect(priv->bus, address, dev, priv->interface);
 	if (!phydev)
 		return -ENODEV;
 
-	phy_connect_dev(phydev, dev);
-
-	phydev->supported &= PHY_GBIT_FEATURES;
 	if (priv->max_speed) {
 		ret = phy_set_supported(phydev, priv->max_speed);
 		if (ret)
