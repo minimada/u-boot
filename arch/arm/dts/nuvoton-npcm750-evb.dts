@@ -1,14 +1,9 @@
 /dts-v1/;
-#include <dt-bindings/clock/npcm750_poleg-clock.h>
-#include <dt-bindings/gpio/gpio.h>
-#include "nuvoton-npcm7xx-pinctrl.dtsi"
+#include "nuvoton-common-npcm7xx.dtsi"
 
 / {
 	model = "Nuvoton npcm750 Development Board";
 	compatible = "nuvoton,poleg", "nuvoton,npcm750";
-
-	#address-cells = <1>;
-	#size-cells = <1>;
 
 	chosen {
 		stdout-path = &serial0;
@@ -36,95 +31,30 @@
 		i2c13 = &i2c13;
 		i2c14 = &i2c14;
 		i2c15 = &i2c15;
-		spi0 = "/fiu0@fb000000";
-		spi3 = "/fiu3@c0000000";
-		spi4 = "/pspi1@f0200000";
-		//mmc0 = "/sdhci0@f0840000";
-		mmc1 = "/sdhci1@f0842000";
-		gpio0 = "/gpio0@f0010000";
-		gpio1 = "/gpio1@f0011000";
-		gpio2 = "/gpio2@f0012000";
-		gpio3 = "/gpio3@f0013000";
-		gpio4 = "/gpio4@f0014000";
-		gpio5 = "/gpio5@f0015000";
-		gpio6 = "/gpio6@f0016000";
-		gpio7 = "/gpio7@f0017000";
-		usb0 = "/usbd0";
+		spi0 = &fiu0;
+		spi3 = &fiu3;
+		spi4 = &pspi1;
+		mmc0 = &sdhci0;
+		mmc1 = &sdhci1;
+		gpio0 = &gpio0;
+		gpio1 = &gpio1;
+		gpio2 = &gpio2;
+		gpio3 = &gpio3;
+		gpio4 = &gpio4;
+		gpio5 = &gpio5;
+		gpio6 = &gpio6;
+		gpio7 = &gpio7;
+		usb0 = &usbd0;
 		eth0 = &emc0;
 		eth1 = &emc1;
 		eth2 = &gmac0;
 		eth3 = &gmac1;
 	};
 
-	clks: clock-control@f0801000 {
-		compatible = "nuvoton,npcm750-clock";
-		#clock-cells = <1>;
-		reg = <0xf0801000 0x70>;
-		u-boot,dm-pre-reloc;
-	};
-
-	usbd0 {
-		compatible = "nuvoton,poleg-usbd";
-		reg = <0xF0830100 0x200>;
-	};
-
-	serial0: serial0@f0001000 {
-		compatible = "nuvoton,npcm750-uart";
-		reg = <0xf0001000 0x20>;
-		id = <0>;
-		clocks = <&clks CLK_UART>;
-		clock-frequency = <24000000>;
-	};
-	serial1: serial1@f0002000 {
-		compatible = "nuvoton,npcm750-uart";
-		reg = <0xf0002000 0x20>;
-		id = <1>;
-		clocks = <&clks CLK_UART>;
-		clock-frequency = <24000000>;
-	};
-	serial2: serial2@f0003000 {
-		compatible = "nuvoton,npcm750-uart";
-		reg = <0xf0003000 0x20>;
-		id = <2>;
-		clocks = <&clks CLK_UART>;
-		clock-frequency = <24000000>;
-	};
-	serial3: serial3@f0004000 {
-		compatible = "nuvoton,npcm750-uart";
-		reg = <0xf0004000 0x20>;
-		id = <3>;
-		clocks = <&clks CLK_UART>;
-		clock-frequency = <24000000>;
-	};
-
-	timer0: timer@f0008000 {
-		compatible = "nuvoton,poleg-timer";
-		reg = <0xF0008000 0x100>;
-		clocks = <&clks CLK_TIMER>;
-	};
-
-	otp@f0189000 {
-		compatible = "nuvoton,npcm750-otp";
-		reg = <0xf0189000 0x1000
-			   0xf018a000 0x1000>;
-		clocks = <&clks CLK_APB4>;
-	};
-
-	rng@f000b000 {
-		compatible = "nuvoton,npcm750-rng";
-		reg = <0xf000b000 0x1000>;
-		clocks = <&clks CLK_APB1>;
-	};
-
-	fiu0@fb000000 {
-		compatible = "nuvoton,npcm750-fiu";
-		#address-cells = <1>;
-		#size-cells = <0>;
-		reg = <0xfb000000 0x1000>;
-		index = <0>;
-		spi-max-frequency = <66000000>;
+	fiu0: fiu0@fb000000 {
 		pinctrl-names = "default";
 		pinctrl-0 = <&spi0cs1_pins>;
+		status = "okay";
 		spi_flash@0 {
 			compatible = "spi-flash";
 			reg = <0>; /* Chip select 0 */
@@ -136,16 +66,9 @@
 			memory-map = <0x88000000 0x2000000>;
 		};
 	};
-	fiu3@c0000000 {
-		compatible = "nuvoton,npcm750-fiu";
-		#address-cells = <1>;
-		#size-cells = <0>;
-		reg = <0xc0000000 0x1000>;
-		index = <3>;
-		spi-max-frequency = <50000000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&spi3_pins
-			&spi3quad_pins>;
+
+	fiu3: fiu3@c0000000 {
+		status = "okay";
 		spi_flash@0 {
 			compatible = "spi-flash";
 			reg = <0>; /* Chip select 0 */
@@ -153,306 +76,119 @@
 		};
 	};
 
-	pspi1@f0200000 {
-		compatible = "nuvoton,npcm750-pspi";
-		#address-cells = <1>;
-		#size-cells = <0>;
-		reg = <0xf0200000 0x1000>;
-		index = <0>;
-		spi-max-frequency = <25000000>;
-		cs-gpios = <&gpio6 203 GPIO_ACTIVE_HIGH>;
-		clocks = <&clks CLK_APB5>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&pspi1_pins>;
+	pspi1: pspi1@f0200000 {
+		status = "okay";
 	};
 
-	/*sdhci0@f0840000 {
-		compatible = "nuvoton,npcmx50-sdhci-SD";
-		reg = <0xf0840000 0x2000>;
-		index = <0x0>;
-		bus-width = <0x4>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&sd1_pins>;
-	};*/
-
-	sdhci1@f0842000 {
-		compatible = "nuvoton,npcmx50-sdhci-eMMC";
-		reg = <0xf0842000 0x200>;
-		index = <0x1>;
-		bus-width = <0x8>;
-		clocks = <&clks CLK_EMMC>;
-		clock-frequency = <50000000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&mmc_pins
-			&mmc8_pins>;
+	usbd0: usbd0@f0830100 {
+		status = "okay";
 	};
 
-	aes@f0858000 {
-		compatible = "nuvoton,npcm750-aes";
-		reg = <0xf0858000 0x1000>;
-		clocks = <&clks CLK_AHB>;
-		clock-names = "clk_ahb";
+	pspi1: pspi1@f0200000 {
+		status = "okay";
 	};
 
-	sha@f085a000 {
-		compatible = "nuvoton,npcm750-sha";
-		reg = <0xf085a000 0x1000>;
-		clocks = <&clks CLK_AHB>;
-		clock-names = "clk_ahb";
+	sdhci1: sdhci1@f0842000 {
+		status = "okay";
 	};
 
-	gpio0@f0010000 {
-		compatible = "nuvoton,npcm750-gpio";
-		reg = <0xf0010000 0x1000>;
-		#gpio-cells = <2>;
-		gpio-controller;
-		gpio-bank-name = "gpio0";
-		gpio-count = <32>;
-		gpio-port = <0>;
+	otp: otp@f0189000 {
+		status = "okay";
 	};
 
-	gpio1@f0011000 {
-		compatible = "nuvoton,npcm750-gpio";
-		reg = <0xf0011000 0x1000>;
-		#gpio-cells = <2>;
-		gpio-controller;
-		gpio-bank-name = "gpio1";
-		gpio-count = <32>;
-		gpio-port = <1>;
+	rng: rng@f000b000 {
+		status = "okay";
 	};
 
-	gpio2@f0012000 {
-		compatible = "nuvoton,npcm750-gpio";
-		reg = <0xf0012000 0x1000>;
-		#gpio-cells = <2>;
-		gpio-controller;
-		gpio-bank-name = "gpio2";
-		gpio-count = <32>;
-		gpio-port = <2>;
+	aes: aes@f0858000 {
+		status = "okay";
 	};
 
-	gpio3@f0013000 {
-		compatible = "nuvoton,npcm750-gpio";
-		reg = <0xf0013000 0x1000>;
-		#gpio-cells = <2>;
-		gpio-controller;
-		gpio-bank-name = "gpio3";
-		gpio-count = <32>;
-		gpio-port = <3>;
-	};
-
-	gpio4@f0014000 {
-		compatible = "nuvoton,npcm750-gpio";
-		reg = <0xf0014000 0x1000>;
-		#gpio-cells = <2>;
-		gpio-controller;
-		gpio-bank-name = "gpio4";
-		gpio-count = <32>;
-		gpio-port = <4>;
-	};
-
-	gpio5@f0015000 {
-		compatible = "nuvoton,npcm750-gpio";
-		reg = <0xf0015000 0x1000>;
-		#gpio-cells = <2>;
-		gpio-controller;
-		gpio-bank-name = "gpio5";
-		gpio-count = <32>;
-		gpio-port = <5>;
-	};
-
-	gpio6: gpio6@f0016000 {
-		compatible = "nuvoton,npcm750-gpio";
-		reg = <0xf0016000 0x1000>;
-		#gpio-cells = <2>;
-		gpio-controller;
-		gpio-bank-name = "gpio6";
-		gpio-count = <32>;
-		gpio-port = <6>;
-	};
-
-	gpio7@f0017000 {
-		compatible = "nuvoton,npcm750-gpio";
-		reg = <0xf0017000 0x1000>;
-		#gpio-cells = <2>;
-		gpio-controller;
-		gpio-bank-name = "gpio7";
-		gpio-count = <32>;
-		gpio-port = <7>;
+	sha: sha@f085a000 {
+		status = "okay";
 	};
 
 	gmac0: gmac0@f0802000 {
-		compatible = "nuvoton,npcm750-dwmac";
-		reg = <0xF0802000 0x2000>;
-		phy-mode = "rgmii";
-		pinctrl-names = "default";
-		pinctrl-0 = <&rg1_pins
-			&rg1mdio_pins>;
+		status = "okay";
 	};
+
 	gmac1: gmac1@f0804000 {
-		compatible = "nuvoton,npcm750-dwmac";
-		reg = <0xF0804000 0x2000>;
-		phy-mode = "rgmii";
-		pinctrl-names = "default";
-		pinctrl-0 = <&rg2_pins
-			&rg2mdio_pins>;
+		status = "okay";
 	};
 
 	emc0: emc0@f0825000 {
-		compatible = "nuvoton,npcm750-emc";
-		reg = <0xF0825000 0x1000>;
-		phy-mode = "rmii";
-		id = <0>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&r1_pins
-			&r1err_pins
-			&r1md_pins>;
-	};
-	emc1: emc1@f0825000 {
-		compatible = "nuvoton,npcm750-emc";
-		reg = <0xF0825000 0x1000>;
-		phy-mode = "rmii";
-		id = <1>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&r2_pins
-			&r2err_pins
-			&r2md_pins>;
+		status = "okay";
 	};
 
-	ehci {
-		compatible = "nuvoton,poleg-ehci";
-		reg = <0xF0806100 0x100>;
+	emc1: emc1@f0826000 {
+		status = "okay";
+	};
+
+	ehci: ehci {
+		status = "okay";
 	};
 
 	i2c0: i2c-bus@f0080000 {
-		reg = <0xf0080000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb0_pins>;
+		status = "okay";
 	};
+
 	i2c1: i2c-bus@f0081000 {
-		reg = <0xf0081000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb1_pins>;
+		status = "okay";
 	};
+
 	i2c2: i2c-bus@f0082000 {
-		reg = <0xf0082000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb2_pins>;
+		status = "okay";
 	};
+
 	i2c3: i2c-bus@f0083000 {
-		reg = <0xf0083000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb3_pins>;
+		status = "okay";
 	};
+
 	i2c4: i2c-bus@f0084000 {
-		reg = <0xf0084000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb4_pins>;
+		status = "okay";
 	};
+
 	i2c5: i2c-bus@f0085000 {
-		reg = <0xf0085000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb5_pins>;
+		status = "okay";
 	};
+
 	i2c6: i2c-bus@f0086000 {
-		reg = <0xf0086000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb6_pins>;
+		status = "okay";
 	};
+
 	i2c7: i2c-bus@f0087000 {
-		reg = <0xf0087000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb7_pins>;
+		status = "okay";
 	};
+
 	i2c8: i2c-bus@f0088000 {
-		reg = <0xf0088000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb8_pins>;
+		status = "okay";
 	};
+
 	i2c9: i2c-bus@f0089000 {
-		reg = <0xf0089000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb9_pins>;
+		status = "okay";
 	};
+
 	i2c10: i2c-bus@f008a000 {
-		reg = <0xf008a000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb10_pins>;
+		status = "okay";
 	};
+
 	i2c11: i2c-bus@f008b000 {
-		reg = <0xf008b000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb11_pins>;
+		status = "okay";
 	};
+
 	i2c12: i2c-bus@f008c000 {
-		reg = <0xf008c000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb12_pins>;
+		status = "okay";
 	};
+
 	i2c13: i2c-bus@f008d000 {
-		reg = <0xf008d000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb13_pins>;
+		status = "okay";
 	};
+
 	i2c14: i2c-bus@f008e000 {
-		reg = <0xf008e000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb14_pins>;
+		status = "okay";
 	};
+
 	i2c15: i2c-bus@f008f000 {
-		reg = <0xf008f000 0x1000>;
-		compatible = "nuvoton,npcm750-i2c-bus";
-		clocks = <&clks CLK_APB2>;
-		clock-frequency = <100000>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&smb15_pins>;
+		status = "okay";
 	};
-    pinctrl: pinctrl@f0800000 {
-        compatible = "nuvoton,npcm7xx-pinctrl";
-    };
 };
