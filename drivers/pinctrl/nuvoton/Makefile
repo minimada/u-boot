@@ -1,1 +1,1 @@
-obj-$(CONFIG_NUVOTON_NPCM7XX_PINCTRL) += pinctrl-npcm7xx.o
+obj-$(CONFIG_PINCTRL_NPCM7XX) += pinctrl-npcm7xx.o

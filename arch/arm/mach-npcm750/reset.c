@@ -50,8 +50,6 @@ enum reset_type npcm7xx_reset_reason(void)
 
 	value &= RESSR_MASK;
 
-	if (value & PORST)
-		type = PORST;
 	if (value & CORST)
 		type = CORST;
 	if (value & WD0RST)
@@ -60,6 +58,8 @@ enum reset_type npcm7xx_reset_reason(void)
 		type = WD1RST;
 	if (value & WD2RST)
 		type = WD2RST;
+	if (value & PORST)
+		type = PORST;
 
 	return type;
 }
