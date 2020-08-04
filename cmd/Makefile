@@ -12,6 +12,7 @@ obj-y += version.o
 
 # command
 obj-$(CONFIG_CMD_NUC_TST) += standalone_test.o
+obj-$(CONFIG_CMD_MCU) += mcu_updater.o
 obj-$(CONFIG_CMD_AES) += aes.o
 obj-$(CONFIG_CMD_ADC) += adc.o
 obj-$(CONFIG_CMD_ARMFLASH) += armflash.o

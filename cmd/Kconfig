@@ -858,6 +858,11 @@ config CMD_LOADS
 	help
 	  Load an S-Record file over serial line
 
+config CMD_MCU
+	bool "mcu"
+	help
+	  Nuvonton Runbmc MCU firmware update utility.
+
 config CMD_MMC
 	bool "mmc"
 	help
