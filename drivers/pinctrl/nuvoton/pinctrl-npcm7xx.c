@@ -1482,7 +1482,11 @@ static int npcm7xx_pinconf_set(struct udevice *dev, unsigned int pin,
 		setbits_le32(base + NPCM7XX_GP_N_EVST, BIT(gpio));
 		return err;
 	}
-
+	// allow set persist state disable
+	if (param == PIN_CONFIG_PERSIST_STATE && arg == 0) {
+		npcm7xx_gpio_reset_persist(dev, bank, arg);
+		return err;
+	}
 	if (is_gpio_persist(dev, npcm7xx_reset_reason(), bank))
 		return err;
 
@@ -1527,9 +1531,6 @@ static int npcm7xx_pinconf_set(struct udevice *dev, unsigned int pin,
 	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
 		dev_dbg(dev, "set pin %d open drain \n", pin);
 		setbits_le32(base + NPCM7XX_GP_N_OTYP, BIT(gpio));
-		break;
-	case PIN_CONFIG_PERSIST_STATE:
-		npcm7xx_gpio_reset_persist(dev, bank, arg);
 		break;
 	case PIN_CONFIG_INPUT_DEBOUNCE:
 		dev_dbg(dev, "set pin %d input debounce \n", pin);
